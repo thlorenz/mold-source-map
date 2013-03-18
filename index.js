@@ -77,6 +77,16 @@ var relativePathTransform = exports.relativePathTransform = function (root) {
   };
 };
 
+/**
+ * Adjusts all sources paths inside the source map contained in the content that is piped to it.
+ *
+ * Example: bundleStream.pipe(mold.sourcesRelative(root)).pipe(fs.createWriteStream(bundlePath))
+ *
+ * @name sourcesRelative
+ * @function
+ * @param root {String} The path to make sources relative to.
+ * @return {Stream} A duplex stream that writes out content with source map that had all sources paths adjusted.
+ */
 exports.sourcesRelative = function (root) {
   return transformSources(relativePathTransform(root));
 };
