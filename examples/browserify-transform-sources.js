@@ -13,3 +13,5 @@ browserify()
   .on('error', function (err) { console.error(err); })
   .pipe(mold.sourcesRelative(jsRoot))
   .pipe(fs.createWriteStream(bundlePath));
+
+console.log('Please open the index.html inside examples/project.');
