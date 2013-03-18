@@ -1,26 +1,39 @@
 {
-    "name" : "mold-source-map",
-    "version" : "0.0.0",
-    "description" : "Mold a source map that is almost perfect for you into one that is.",
-    "main" : "mold-source-map.js",
-    "scripts" : {
-        "test" : "node-trap test/*.js"
-    },
-    "repository" : {
-        "type" : "git",
-        "url" : "git://github.com/thlorenz/mold-source-map.git"
-    },
-    "homepage" : "https://github.com/thlorenz/mold-source-map",
-    "dependencies" : {
-    },
-    "devDependencies" : {
-    },
-    "keywords": ["mold", "change", "modify", "adapt", "sourcemap", "source", "map", "browserify" ] ,
-    "author" : {
-        "name" : "Thorsten Lorenz",
-        "email" : "thlorenz@gmx.de",
-        "url" : "http://thlorenz.com"
-    },
-    "license" : "MIT",
-    "engine" : { "node" : ">=0.6" }
+  "name": "mold-source-map",
+  "version": "0.0.0",
+  "description": "Mold a source map that is almost perfect for you into one that is.",
+  "main": "mold-source-map.js",
+  "scripts": {
+    "test": "node-trap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thlorenz/mold-source-map.git"
+  },
+  "homepage": "https://github.com/thlorenz/mold-source-map",
+  "dependencies": {
+    "convert-source-map": "~0.2.3"
+  },
+  "devDependencies": {
+    "trap": "~0.4.2"
+  },
+  "keywords": [
+    "mold",
+    "change",
+    "modify",
+    "adapt",
+    "sourcemap",
+    "source",
+    "map",
+    "browserify"
+  ],
+  "author": {
+    "name": "Thorsten Lorenz",
+    "email": "thlorenz@gmx.de",
+    "url": "http://thlorenz.com"
+  },
+  "license": "MIT",
+  "engine": {
+    "node": ">=0.6"
+  }
 }
