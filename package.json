@@ -4,7 +4,7 @@
   "description": "Mold a source map that is almost perfect for you into one that is.",
   "main": "mold-source-map.js",
   "scripts": {
-    "test": "node-trap test/*.js"
+    "test": "tap test/*.js"
   },
   "repository": {
     "type": "git",
@@ -16,8 +16,8 @@
     "through": "~2.2.7"
   },
   "devDependencies": {
-    "trap": "~0.4.2",
-    "browserify": "~2.7.1"
+    "browserify": "~2.7.1",
+    "tap": "~0.4.0"
   },
   "keywords": [
     "mold",
