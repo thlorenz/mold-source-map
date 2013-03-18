@@ -41,3 +41,9 @@ browserify()
  * @return {Stream} A duplex stream that writes out content with source map that had all sources paths adjusted.
  */
  ```
+
+## Unstable API
+
+A more custom/advanced API will be/is exposed, however it is still in high fluctuation.
+
+Take a look at the `index.js` to get an idea of what's coming/already there.
