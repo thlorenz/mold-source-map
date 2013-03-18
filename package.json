@@ -12,10 +12,12 @@
   },
   "homepage": "https://github.com/thlorenz/mold-source-map",
   "dependencies": {
-    "convert-source-map": "~0.2.3"
+    "convert-source-map": "~0.2.3",
+    "through": "~2.2.7"
   },
   "devDependencies": {
-    "trap": "~0.4.2"
+    "trap": "~0.4.2",
+    "browserify": "~2.7.1"
   },
   "keywords": [
     "mold",

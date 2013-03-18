@@ -1,0 +1,82 @@
+'use strict';
+
+var convert = require('convert-source-map')
+  , inherits = require('util').inherits
+  , through = require('through')
+  , path = require('path');
+
+function extractComment (source) {
+  var m = source.match(convert.commentRegex);
+  return m ? m.pop() : null;
+} 
+
+function Molder(sourcemap) {
+  this.sourcemap = sourcemap;
+}
+
+Molder.prototype.toJSON    =  function () { return this.sourcemap.toJSON(); };
+Molder.prototype.toBase64  =  function () { return this.sourcemap.toBase64(); };
+Molder.prototype.toComment =  function () { return this.sourcemap.toComment(); };
+Molder.prototype.toObject  =  function () { return this.sourcemap.toObject(); };
+
+Molder.prototype._map = function (key, fn) {
+  this.sourcemap.setProperty(key, this.sourcemap.getProperty(key).map(fn));
+};
+
+Molder.prototype.mapSources = function (fn) {
+  this._map('sources', fn);
+};
+
+Molder.prototype.file = function (file) {
+  this.sourcemap.setProperty('file', file);
+};
+
+Molder.prototype.sourceRoot = function (sourceRoot) {
+  this.sourcemap.setProperty('sourceRoot', sourceRoot);
+};
+
+function SourceMolder(source) {
+  this.source = source;
+  this.comment = extractComment(source);
+  if (!this.comment) return undefined;
+
+  var sm = convert.fromComment(this.comment);
+  Molder.call(this, sm);
+}
+
+inherits(SourceMolder, Molder);
+
+SourceMolder.prototype.replaceComment = function () {
+  var moldedComment = this.sourcemap.toComment();
+  return this.source.replace(this.comment, moldedComment);
+};
+
+
+var fromSource = exports.fromSource = function (source) {
+  return new SourceMolder(source);
+};
+
+var transformSources = exports.transformSources = function (fn) {
+  var source = '';
+
+  function write (data) { source += data; }
+  function end () { 
+    var sm = fromSource(source);
+    sm.mapSources(fn);
+    this.queue(sm.replaceComment());
+    this.queue(null);
+  }
+
+  return through(write, end);
+};
+
+var relativePathTransform = exports.relativePathTransform = function (root) {
+  return function transform(file) {
+    // add leading space here since devtools cuts off first char
+    return ' ' + path.relative(root, file);
+  };
+};
+
+exports.sourcesRelative = function (root) {
+  return transformSources(relativePathTransform(root));
+};
