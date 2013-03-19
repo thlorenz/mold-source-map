@@ -14,7 +14,7 @@ function Molder(sourcemap) {
   this.sourcemap = sourcemap;
 }
 
-Molder.prototype.toJSON    =  function () { return this.sourcemap.toJSON(); };
+Molder.prototype.toJSON    =  function (space) { return this.sourcemap.toJSON(space); };
 Molder.prototype.toBase64  =  function () { return this.sourcemap.toBase64(); };
 Molder.prototype.toComment =  function () { return this.sourcemap.toComment(); };
 Molder.prototype.toObject  =  function () { return this.sourcemap.toObject(); };
@@ -95,10 +95,10 @@ exports.transform = function (fn) {
     }
 
     if (fn.length === 1) {
-      var adaptedComment = fn(sourceMolder.sourcemap);
+      var adaptedComment = fn(sourceMolder);
       queue.bind(this)(adaptedComment);
     } else if (fn.length > 1) {
-      fn(sourceMolder.sourcemap, queue.bind(this));
+      fn(sourceMolder, queue.bind(this));
     } else {
       throw new Error('Function passed to transform needs to take 1 or 2 parameters.');
     }

@@ -6,6 +6,7 @@ var test = require('tap').test
   , convert    =  require('convert-source-map')
   , mold       =  require('..')
 
+
 function mapFileUrlComment(sourcemap, cb) {
   setTimeout(function () {
     cb('//@ sourceMappingURL=' + '/bundle.js.map');
@@ -17,6 +18,7 @@ function mapFileUrlCommentSync(sourcemap) {
 }
 
 test('mold transform async', function (t) {
+  t.plan(2)
   var bundle = '';
   browserify()
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
@@ -29,11 +31,11 @@ test('mold transform async', function (t) {
     .on('end', function () {
       t.notOk(~bundle.indexOf('application/json'), 'removes original comment')
       t.ok(~bundle.indexOf('//@ sourceMappingURL=/bundle.js.map'), 'adds returned comment')
-      t.end()
     });
 });
 
 test('mold transform sync', function (t) {
+  t.plan(2)
   var bundle = '';
   browserify()
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
@@ -46,6 +48,5 @@ test('mold transform sync', function (t) {
     .on('end', function () {
       t.notOk(~bundle.indexOf('application/json'), 'removes original comment')
       t.ok(~bundle.indexOf('//@ sourceMappingURL=/bundle.js.map'), 'adds returned comment')
-      t.end()
     });
 });
