@@ -13,7 +13,6 @@ var path       =  require('path')
 browserify()
   .require(require.resolve('./project/js/main.js'), { entry: true })
   .bundle({ debug: true })
-  .on('error', function (err) { console.error(err); })
 
   // will show all source files relative to jsRoot inside devtools
   .pipe(mold.sourcesRelative(jsRoot))
