@@ -12,17 +12,23 @@ var test =        require('tap').test
 test('mold sources', function (t) {
   t.plan(1)
 
+  function map(src) { 
+    return src + '// this is actually included in the sourcemap'; 
+  }
+
   var bundle = '';
   browserify()
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
     .bundle({ debug: true })
-    .pipe(mold.sourcesRelative(jsRoot))
     .on('error', function (err) { console.error(err); })
+
+    .pipe(mold.transformSourcesContent(map))
     .on('data', function (data) {
       bundle += data;    
     })
     .on('end', function () {
       var sm = convert.fromSource(bundle);
-      t.deepEqual(sm.getProperty('sources'), [ ' js/main.js', ' js/foo.js', ' js/wunder/bar.js' ], 'molds all sources relative to js root')
+      t.ok(~sm.getProperty('sourcesContent')[0].indexOf('// this is actually included in the sourcemap')
+         ,'molds all sources contents viat the map function')
     });
 });

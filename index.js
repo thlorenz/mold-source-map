@@ -27,6 +27,10 @@ Molder.prototype.mapSources = function (fn) {
   this._map('sources', fn);
 };
 
+Molder.prototype.mapSourcesContent = function (fn) {
+  this._map('sourcesContent', fn);
+};
+
 Molder.prototype.file = function (file) {
   this.sourcemap.setProperty('file', file);
 };
@@ -51,23 +55,26 @@ SourceMolder.prototype.replaceComment = function () {
   return this.source.replace(this.comment, moldedComment);
 };
 
+function transformMap(fnKey, mapFn) {
+  var source = '';
+
+  function write (data) { source += data; }
+  function end () { 
+    var sourceMolder = fromSource(source);
+    sourceMolder[fnKey](mapFn);
+    this.queue(sourceMolder.replaceComment());
+    this.queue(null);
+  }
+
+  return through(write, end);
+}
 
 var fromSource = exports.fromSource = function (source) {
   return new SourceMolder(source);
 };
 
 var transformSources = exports.transformSources = function (fn) {
-  var source = '';
-
-  function write (data) { source += data; }
-  function end () { 
-    var sm = fromSource(source);
-    sm.mapSources(fn);
-    this.queue(sm.replaceComment());
-    this.queue(null);
-  }
-
-  return through(write, end);
+  return transformMap('mapSources', fn);
 };
 
 var relativePathTransform = exports.relativePathTransform = function (root) {
@@ -89,4 +96,8 @@ var relativePathTransform = exports.relativePathTransform = function (root) {
  */
 exports.sourcesRelative = function (root) {
   return transformSources(relativePathTransform(root));
+};
+
+exports.transformSourcesContent = function (fn) {
+  return transformMap('mapSourcesContent', fn);
 };
