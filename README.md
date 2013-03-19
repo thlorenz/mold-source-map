@@ -69,6 +69,8 @@ browserify()
   .pipe(fs.createWriteStream(bundlePath));
 ```
 
+If you want to build and serve the bundle on the fly, you should do this more similar to how it is done in [this example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file.js).
+
 The below are convenience transforms for special use cases. They all could be archieved with the generic transform as
 well.
 
