@@ -73,10 +73,6 @@ var fromSource = exports.fromSource = function (source) {
   return new SourceMolder(source);
 };
 
-var transformSources = exports.transformSources = function (fn) {
-  return transformMap('mapSources', fn);
-};
-
 var relativePathTransform = exports.relativePathTransform = function (root) {
   return function transform(file) {
     // add leading space here since devtools cuts off first char
@@ -100,4 +96,8 @@ exports.sourcesRelative = function (root) {
 
 exports.transformSourcesContent = function (fn) {
   return transformMap('mapSourcesContent', fn);
+};
+
+var transformSources = exports.transformSources = function (fn) {
+  return transformMap('mapSources', fn);
 };
