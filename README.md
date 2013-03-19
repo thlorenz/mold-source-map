@@ -33,7 +33,7 @@ like [browserify](https://github.com/substack/node-browserify).
 
 #### transform(function map(sourcemap[, callback]) {})
 
-This is the most generic an powerfull feature as it allows replacing the entire sourcemap comment with another `String`.
+This is the most generic and powerfull feature as it allows replacing the entire sourcemap comment with another `String`.
 
 It takes a map function as input whose `sourcemap` argument has all information and lots of functions regarding the existing source map.
 
@@ -64,7 +64,6 @@ function mapFileUrlCommentSync(sourcemap) {
 browserify()
   .require(require.resolve('./project/js/main.js'), { entry: true })
   .bundle({ debug: true })
-  .on('error', function (err) { console.error(err); })
   .pipe(mold.transform(mapFileUrlCommentSync))
   .pipe(fs.createWriteStream(bundlePath));
 ```
