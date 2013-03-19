@@ -33,9 +33,9 @@ like [browserify](https://github.com/substack/node-browserify).
 
 #### transform(function map(sourcemap[, callback]) {})
 
-This is the most generic an powerfull feature that allows replacing the entire sourcemap comment with something else.
+This is the most generic an powerfull feature as it allows replacing the entire sourcemap comment with another `String`.
 
-It takes a map function as input whose `sourcemap` argument has all information and lots of functions regarding the existing source map. If 
+It takes a map function as input whose `sourcemap` argument has all information and lots of functions regarding the existing source map.
 
 The optional `callback` can be used to call back with the final source map comment. If it is given, the transform will
 invoke the function asynchronously, otherwise you may just return the final source map comment.
