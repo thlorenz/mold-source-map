@@ -37,7 +37,7 @@ Here is a snippet from [an example](https://github.com/thlorenz/mold-source-map/
 showing how to use this in order to write out an external map file and point the browser to it:
 
 ```js
-function mapFileUrlCommentSync(sourcemap) {
+function mapFileUrlComment(sourcemap, cb) {
   
   // make source files appear under the following paths:
   // /js
@@ -45,28 +45,31 @@ function mapFileUrlCommentSync(sourcemap) {
   //    main.js
   // /js/wunder
   //    bar.js 
-
+  
   sourcemap.sourceRoot('file://'); 
   sourcemap.mapSources(mold.mapPathRelativeTo(jsRoot));
 
   // write map file and return a sourceMappingUrl that points to it
-  fs.writeFileSync(mapFilePath, sourcemap.toJSON(2), 'utf-8');
-  return '//@ sourceMappingURL=' + mapFilePath;
+  fs.writeFile(mapFilePath, sourcemap.toJSON(2), 'utf-8', function (err) {
+    if (err) return console.error(err);
+    cb('//@ sourceMappingURL=' + mapFilePath);
+  });
 }
 
 browserify()
   .require(require.resolve('./project/js/main.js'), { entry: true })
   .bundle({ debug: true })
-  .pipe(mold.transform(mapFileUrlCommentSync))
+  .pipe(mold.transform(mapFileUrlComment))
   .pipe(fs.createWriteStream(bundlePath));
 ```
 
-If you want to build and serve the bundle on the fly, you should do this more similar to how it is done in [this example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file.js).
+[This example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file-sync.js) achieves the same using sync operations.
 
-The below are convenience transforms for special use cases. They all could be archieved with the generic transform as
-well.
+### Convenience Transforms
 
-### transformSourcesRelative(root)
+The below transforms addressing special use cases. These cases all could be implemented with the generic transform as well.
+
+#### transformSourcesRelative(root)
 
 ```
 /**
