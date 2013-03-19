@@ -55,7 +55,7 @@ SourceMolder.prototype.replaceComment = function () {
   return this.source.replace(this.comment, moldedComment);
 };
 
-function transformMap(fnKey, mapFn) {
+function mapToTransform(fnKey, mapFn) {
   var source = '';
 
   function write (data) { source += data; }
@@ -73,11 +73,46 @@ var fromSource = exports.fromSource = function (source) {
   return new SourceMolder(source);
 };
 
-var relativePathTransform = exports.relativePathTransform = function (root) {
-  return function transform(file) {
+function mapPathRelativeTo (root) {
+  return function map(file) {
     // add leading space here since devtools cuts off first char
     return ' ' + path.relative(root, file);
   };
+}
+
+exports.mapPathRelativeTo = mapPathRelativeTo;
+
+exports.transform = function (fn) {
+  var source = '';
+
+  function write (data) { source += data; }
+  function end () { 
+    var sourceMolder = fromSource(source);
+
+    function queue(adaptedComment) {
+      this.queue(source.replace(sourceMolder.comment, adaptedComment));
+      this.queue(null);
+    }
+
+    if (fn.length === 1) {
+      var adaptedComment = fn(sourceMolder.sourcemap);
+      queue.bind(this)(adaptedComment);
+    } else if (fn.length > 1) {
+      fn(sourceMolder.sourcemap, queue.bind(this));
+    } else {
+      throw new Error('Function passed to transform needs to take 1 or 2 parameters.');
+    }
+  }   
+
+  return through(write, end);
+};
+
+exports.transformSourcesContent = function (map) {
+  return mapToTransform('mapSourcesContent', map);
+};
+
+exports.transformSources = function (map) {
+  return mapToTransform('mapSources', map);
 };
 
 /**
@@ -85,19 +120,12 @@ var relativePathTransform = exports.relativePathTransform = function (root) {
  *
  * Example: bundleStream.pipe(mold.sourcesRelative(root)).pipe(fs.createWriteStream(bundlePath))
  *
- * @name sourcesRelative
+ * @name transformSourcesRelativeTo
  * @function
  * @param root {String} The path to make sources relative to.
  * @return {Stream} A duplex stream that writes out content with source map that had all sources paths adjusted.
  */
-exports.sourcesRelative = function (root) {
-  return transformSources(relativePathTransform(root));
+exports.transformSourcesRelativeTo = function (root) {
+  return exports.transformSources(mapPathRelativeTo(root));
 };
 
-exports.transformSourcesContent = function (fn) {
-  return transformMap('mapSourcesContent', fn);
-};
-
-var transformSources = exports.transformSources = function (fn) {
-  return transformMap('mapSources', fn);
-};

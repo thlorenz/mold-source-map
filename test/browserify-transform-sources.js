@@ -16,7 +16,7 @@ test('mold sources', function (t) {
   browserify()
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
     .bundle({ debug: true })
-    .pipe(mold.sourcesRelative(jsRoot))
+    .pipe(mold.transformSourcesRelativeTo(jsRoot))
     .on('error', function (err) { console.error(err); })
     .on('data', function (data) {
       bundle += data;    
