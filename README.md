@@ -33,7 +33,7 @@ It takes a map function as input whose `sourcemap` argument has all information 
 The optional `callback` can be used to call back with the final source map comment. If it is given, the transform will
 invoke the function asynchronously, otherwise you may just return the final source map comment.
 
-Here is a snippet from [an example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file-sync.js) 
+Here is a snippet from [an example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file.js) 
 showing how to use this in order to write out an external map file and point the browser to it:
 
 ```js
