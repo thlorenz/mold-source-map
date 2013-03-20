@@ -52,7 +52,7 @@ function mapFileUrlComment(sourcemap, cb) {
   // write map file and return a sourceMappingUrl that points to it
   fs.writeFile(mapFilePath, sourcemap.toJSON(2), 'utf-8', function (err) {
     if (err) return console.error(err);
-    cb('//@ sourceMappingURL=' + mapFilePath);
+    cb('//@ sourceMappingURL=' + path.basename(mapFilePath));
   });
 }
 
