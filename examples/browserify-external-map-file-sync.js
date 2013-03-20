@@ -25,7 +25,7 @@ function mapFileUrlCommentSync(sourcemap) {
   fs.writeFileSync(mapFilePath, sourcemap.toJSON(2), 'utf-8');
   // Giving just a filename instead of a path will cause the browser to look for the map file 
   // right next to where it loaded the bundle from.
-  // Therefore this way the map is found if the page is served or opened from the filesystem.
+  // Therefore this way the map is found no matter if the page is served or opened from the filesystem.
   return '//@ sourceMappingURL=' + path.basename(mapFilePath);
 }
 
