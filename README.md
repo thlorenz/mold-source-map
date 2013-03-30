@@ -3,22 +3,15 @@
 Mold a source map that is almost perfect for you into one that is.
 
 ```js
-var path       =  require('path')
-  , fs         =  require('fs')
-  , browserify =  require('browserify')
-  , mold       =  require('mold-source-map')
-  , bundlePath =  path.join(__dirname, 'project', 'js', 'build', 'bundle.js')
-  , jsRoot     =  path.join(__dirname, 'project');
-
 browserify()
   .require(require.resolve('./project/js/main.js'), { entry: true })
   .bundle({ debug: true })
-  .on('error', function (err) { console.error(err); })
 
   // will show all source files relative to jsRoot inside devtools
   .pipe(mold.transformSourcesRelativeTo(jsRoot))
   .pipe(fs.createWriteStream(bundlePath));
 ```
+Full example [here](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-sources.js).
 
 ## Installation
 
@@ -33,18 +26,18 @@ like [browserify](https://github.com/substack/node-browserify).
 
 #### transform(function map(sourcemap[, callback]) {})
 
-This is the most generic an powerfull feature as it allows replacing the entire sourcemap comment with another `String`.
+This is the most generic and powerfull feature as it allows replacing the entire sourcemap comment with another `String`.
 
 It takes a map function as input whose `sourcemap` argument has all information and lots of functions regarding the existing source map.
 
 The optional `callback` can be used to call back with the final source map comment. If it is given, the transform will
 invoke the function asynchronously, otherwise you may just return the final source map comment.
 
-Here is a snippet from [an example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file-sync.js) 
+Here is a snippet from [an example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file.js) 
 showing how to use this in order to write out an external map file and point the browser to it:
 
 ```js
-function mapFileUrlCommentSync(sourcemap) {
+function mapFileUrlComment(sourcemap, cb) {
   
   // make source files appear under the following paths:
   // /js
@@ -52,25 +45,29 @@ function mapFileUrlCommentSync(sourcemap) {
   //    main.js
   // /js/wunder
   //    bar.js 
-
+  
   sourcemap.sourceRoot('file://'); 
   sourcemap.mapSources(mold.mapPathRelativeTo(jsRoot));
 
   // write map file and return a sourceMappingUrl that points to it
-  fs.writeFileSync(mapFilePath, sourcemap.toJSON(2), 'utf-8');
-  return '//@ sourceMappingURL=' + mapFilePath;
+  fs.writeFile(mapFilePath, sourcemap.toJSON(2), 'utf-8', function (err) {
+    if (err) return console.error(err);
+    cb('//@ sourceMappingURL=' + path.basename(mapFilePath));
+  });
 }
 
 browserify()
   .require(require.resolve('./project/js/main.js'), { entry: true })
   .bundle({ debug: true })
-  .on('error', function (err) { console.error(err); })
-  .pipe(mold.transform(mapFileUrlCommentSync))
+  .pipe(mold.transform(mapFileUrlComment))
   .pipe(fs.createWriteStream(bundlePath));
 ```
 
-The below are convenience transforms for special use cases. They all could be archieved with the generic transform as
-well.
+[This example](https://github.com/thlorenz/mold-source-map/blob/master/examples/browserify-external-map-file-sync.js) achieves the same using sync operations.
+
+### Convenience Transforms
+
+The below transforms addressing special use cases. These cases all could be implemented with the generic transform as well.
 
 ### transformSourcesRelativeTo(root : String)
 

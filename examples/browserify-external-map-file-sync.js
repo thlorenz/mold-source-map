@@ -5,7 +5,8 @@ var path        =  require('path')
   , browserify  =  require('browserify')
   , mold        =  require('..')
   , bundlePath  =  path.join(__dirname, 'project', 'js', 'build', 'bundle.js')
-  , mapFilePath =  path.join(__dirname, 'project', 'js', 'build', 'bundle.js.map')
+    // putting map file right next to bundle file
+  , mapFilePath =  bundlePath +  '.map'
   , jsRoot      =  path.join(__dirname, 'project');
 
 function mapFileUrlCommentSync(sourcemap) {
@@ -22,7 +23,10 @@ function mapFileUrlCommentSync(sourcemap) {
 
   // write map file and return a sourceMappingUrl that points to it
   fs.writeFileSync(mapFilePath, sourcemap.toJSON(2), 'utf-8');
-  return '//@ sourceMappingURL=' + mapFilePath;
+  // Giving just a filename instead of a path will cause the browser to look for the map file 
+  // right next to where it loaded the bundle from.
+  // Therefore this way the map is found no matter if the page is served or opened from the filesystem.
+  return '//@ sourceMappingURL=' + path.basename(mapFilePath);
 }
 
 browserify()
