@@ -16,7 +16,7 @@ browserify()
   .on('error', function (err) { console.error(err); })
 
   // will show all source files relative to jsRoot inside devtools
-  .pipe(mold.sourcesRelative(jsRoot))
+  .pipe(mold.transformSourcesRelativeTo(jsRoot))
   .pipe(fs.createWriteStream(bundlePath));
 ```
 
@@ -72,7 +72,7 @@ browserify()
 The below are convenience transforms for special use cases. They all could be archieved with the generic transform as
 well.
 
-### transformSourcesRelative(root)
+### transformSourcesRelativeTo(root : String)
 
 ```
 /**
