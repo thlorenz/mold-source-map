@@ -75,8 +75,7 @@ var fromSource = exports.fromSource = function (source) {
 
 function mapPathRelativeTo (root) {
   return function map(file) {
-    // add leading space here since devtools cuts off first char
-    return ' ' + path.relative(root, file);
+    return path.relative(root, file);
   };
 }
 

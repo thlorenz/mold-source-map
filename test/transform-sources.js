@@ -26,8 +26,8 @@ test('mold sources', function (t) {
       var sources = sm.getProperty('sources');
 
       t.equal(sources.length, 3, 'molds 3 sources')
-      t.ok(~sources.indexOf(' js/main.js'), 'molds main.js relative to root')
-      t.ok(~sources.indexOf(' js/foo.js'), 'molds foo.js relative to root')
-      t.ok(~sources.indexOf(' js/wunder/bar.js'), 'molds wunder/bar.js relative to root')
+      t.ok(~sources.indexOf('js/main.js'), 'molds main.js relative to root')
+      t.ok(~sources.indexOf('js/foo.js'), 'molds foo.js relative to root')
+      t.ok(~sources.indexOf('js/wunder/bar.js'), 'molds wunder/bar.js relative to root')
     });
 });
