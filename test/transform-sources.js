@@ -10,7 +10,7 @@ var test =        require('tap').test
   , jsRoot     =  path.join(__dirname, '..', 'examples', 'project')
 
 test('mold sources', function (t) {
-  t.plan(1)
+  t.plan(4)
 
   var bundle = '';
   browserify()
@@ -23,6 +23,11 @@ test('mold sources', function (t) {
     })
     .on('end', function () {
       var sm = convert.fromSource(bundle);
-      t.deepEqual(sm.getProperty('sources'), [ ' js/main.js', ' js/foo.js', ' js/wunder/bar.js' ], 'molds all sources relative to js root')
+      var sources = sm.getProperty('sources');
+
+      t.equal(sources.length, 3, 'molds 3 sources')
+      t.ok(~sources.indexOf(' js/main.js'), 'molds main.js relative to root')
+      t.ok(~sources.indexOf(' js/foo.js'), 'molds foo.js relative to root')
+      t.ok(~sources.indexOf(' js/wunder/bar.js'), 'molds wunder/bar.js relative to root')
     });
 });
