@@ -12,8 +12,8 @@
   },
   "homepage": "https://github.com/thlorenz/mold-source-map",
   "dependencies": {
-    "through": "~2.2.7",
-    "convert-source-map": "~0.3.1"
+    "convert-source-map": "~0.3.5",
+    "through": "~2.2.7"
   },
   "devDependencies": {
     "tap": "~0.4.0",
