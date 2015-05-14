@@ -20,9 +20,9 @@ function mapFileUrlCommentSync(sourcemap) {
 test('mold transform async', function (t) {
   t.plan(2)
   var bundle = '';
-  browserify()
+  browserify({ debug: true })
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
-    .bundle({ debug: true })
+    .bundle()
     .pipe(mold.transform(mapFileUrlComment))
     .on('error', function (err) { console.error(err); })
     .on('data', function (data) {
@@ -37,9 +37,9 @@ test('mold transform async', function (t) {
 test('mold transform sync', function (t) {
   t.plan(2)
   var bundle = '';
-  browserify()
+  browserify({ debug: true })
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
-    .bundle({ debug: true })
+    .bundle()
     .pipe(mold.transform(mapFileUrlCommentSync))
     .on('error', function (err) { console.error(err); })
     .on('data', function (data) {
