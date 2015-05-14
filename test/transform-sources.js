@@ -13,9 +13,9 @@ test('mold sources', function (t) {
   t.plan(4)
 
   var bundle = '';
-  browserify()
+  browserify({ debug: true })
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
-    .bundle({ debug: true })
+    .bundle()
     .pipe(mold.transformSourcesRelativeTo(jsRoot))
     .on('error', function (err) { console.error(err); })
     .on('data', function (data) {
@@ -23,7 +23,11 @@ test('mold sources', function (t) {
     })
     .on('end', function () {
       var sm = convert.fromSource(bundle);
-      var sources = sm.getProperty('sources');
+      var sources = sm.getProperty('sources')
+        .filter(function(source) {
+          // exclude browserify's prelude
+          return !/_prelude\.js$/.test(source);
+        });
 
       t.equal(sources.length, 3, 'molds 3 sources')
       t.ok(~sources.indexOf('js/main.js'), 'molds main.js relative to root')

@@ -17,9 +17,9 @@ test('mold sources', function (t) {
   }
 
   var bundle = '';
-  browserify()
+  browserify({ debug: true })
     .require(require.resolve('../examples/project/js/main.js'), { entry: true })
-    .bundle({ debug: true })
+    .bundle()
     .on('error', function (err) { console.error(err); })
 
     .pipe(mold.transformSourcesContent(map))
