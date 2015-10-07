@@ -1,6 +1,6 @@
 {
   "name": "mold-source-map",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Mold a source map that is almost perfect for you into one that is.",
   "main": "mold-source-map.js",
   "scripts": {
