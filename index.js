@@ -2,7 +2,9 @@
 
 var convert = require('convert-source-map')
   , inherits = require('util').inherits
+  , concat = require('concat-stream')
   , through = require('through')
+  , duplex = require('duplexer')
   , path = require('path');
 
 function extractComment (source) {
@@ -56,17 +58,17 @@ SourceMolder.prototype.replaceComment = function () {
 };
 
 function mapToTransform(fnKey, mapFn) {
-  var source = '';
+  var output = through();
 
-  function write (data) { source += data; }
-  function end () { 
+  return duplex(concat(done), output);
+
+  function done (data) { 
+    var source = data.toString();
     var sourceMolder = fromSource(source);
     sourceMolder[fnKey](mapFn);
-    this.queue(sourceMolder.replaceComment());
-    this.queue(null);
+    output.queue(sourceMolder.replaceComment());
+    output.queue(null);
   }
-
-  return through(write, end);
 }
 
 var fromSource = exports.fromSource = function (source) {
@@ -82,28 +84,28 @@ function mapPathRelativeTo (root) {
 exports.mapPathRelativeTo = mapPathRelativeTo;
 
 exports.transform = function (fn) {
-  var source = '';
+  var output = through();
 
-  function write (data) { source += data; }
-  function end () { 
+  return duplex(concat(done), output);
+
+  function done (data) { 
+    var source = data.toString();
     var sourceMolder = fromSource(source);
 
     function queue(adaptedComment) {
-      this.queue(source.replace(sourceMolder.comment, adaptedComment));
-      this.queue(null);
+      output.queue(source.replace(sourceMolder.comment, adaptedComment));
+      output.queue(null);
     }
 
     if (fn.length === 1) {
       var adaptedComment = fn(sourceMolder);
-      queue.bind(this)(adaptedComment);
+      queue(adaptedComment);
     } else if (fn.length > 1) {
-      fn(sourceMolder, queue.bind(this));
+      fn(sourceMolder, queue);
     } else {
       throw new Error('Function passed to transform needs to take 1 or 2 parameters.');
     }
   }   
-
-  return through(write, end);
 };
 
 exports.transformSourcesContent = function (map) {
