@@ -51,7 +51,7 @@ function SourceMolder(source) {
 inherits(SourceMolder, Molder);
 
 SourceMolder.prototype.replaceComment = function () {
-  var moldedComment = this.sourcemap.toComment();
+  var moldedComment = this.toComment();
   return this.source.replace(this.comment, moldedComment);
 };
 
