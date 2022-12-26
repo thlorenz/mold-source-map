@@ -16,7 +16,7 @@ function Molder(sourcemap) {
 
 Molder.prototype.toJSON    =  function (space) { return this.sourcemap.toJSON(space); };
 Molder.prototype.toBase64  =  function () { return this.sourcemap.toBase64(); };
-Molder.prototype.toComment =  function () { return this.sourcemap.toComment(); };
+Molder.prototype.toComment =  function () { return this.sourcemap.toComment({ multiline: true }); };
 Molder.prototype.toObject  =  function () { return this.sourcemap.toObject(); };
 
 Molder.prototype._map = function (key, fn) {
@@ -51,7 +51,7 @@ function SourceMolder(source) {
 inherits(SourceMolder, Molder);
 
 SourceMolder.prototype.replaceComment = function () {
-  var moldedComment = this.sourcemap.toComment();
+  var moldedComment = this.toComment();
   return this.source.replace(this.comment, moldedComment);
 };
 
