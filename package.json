@@ -11,7 +11,9 @@
   },
   "homepage": "https://github.com/thlorenz/mold-source-map",
   "dependencies": {
+    "concat-stream": "^1.5.1",
     "convert-source-map": "^1.1.0",
+    "duplexer": "^0.1.1",
     "through": "~2.2.7"
   },
   "devDependencies": {
