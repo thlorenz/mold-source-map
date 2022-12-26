@@ -61,8 +61,10 @@ function mapToTransform(fnKey, mapFn) {
   function write (data) { source += data; }
   function end () { 
     var sourceMolder = fromSource(source);
-    sourceMolder[fnKey](mapFn);
-    this.queue(sourceMolder.replaceComment());
+    if (sourceMolder.sourcemap) { // sourceMolder.sourcemap is undefined if there is a syntax error
+      sourceMolder[fnKey](mapFn);
+      this.queue(sourceMolder.replaceComment());
+    }
     this.queue(null);
   }
 
