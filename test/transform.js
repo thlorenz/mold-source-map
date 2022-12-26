@@ -34,6 +34,28 @@ test('mold transform async', function (t) {
     });
 });
 
+test('mold transform async without sourcemap present', function (t) {
+  t.plan(3)
+  var bundle = '';
+  var originalSource;
+  browserify({ debug: false })
+    .require(require.resolve('../examples/project/js/main.js'), { entry: true })
+    .bundle()
+    .pipe(mold.transform(function(src, write) {
+      originalSource = src.source;
+      write(src.source);
+    }))
+    .on('error', function (err) { console.error(err); })
+    .on('data', function (data) {
+      bundle += data;
+    })
+    .on('end', function () {
+      t.notOk(~bundle.indexOf('application/json'), 'no inline sourcemap')
+      t.notOk(~bundle.indexOf('//@ sourceMappingURL=/bundle.js.map'), 'no external sourcemap')
+      t.equal(bundle, originalSource, 'source piped trough without modification')
+    });
+});
+
 test('mold transform sync', function (t) {
   t.plan(2)
   var bundle = '';

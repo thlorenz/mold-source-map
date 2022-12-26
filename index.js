@@ -89,7 +89,10 @@ exports.transform = function (fn) {
     var sourceMolder = fromSource(source);
 
     function queue(adaptedComment) {
-      this.queue(source.replace(sourceMolder.comment, adaptedComment));
+      var newSource = (sourceMolder.comment)
+         ? source.replace(sourceMolder.comment, adaptedComment)
+         : source;
+      this.queue(newSource);
       this.queue(null);
     }
 
