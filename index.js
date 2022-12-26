@@ -5,10 +5,18 @@ var convert = require('convert-source-map')
   , through = require('through')
   , path = require('path');
 
+// see convert-source-maps largeSource
+// https://github.com/thlorenz/convert-source-map/blob/v1.3.0/index.js#L47-L55
+// shameless cut and paste
 function extractComment (source) {
-  var m = source.match(convert.commentRegex);
-  return m ? m.pop() : null;
-} 
+  var lines = source.split('\n');
+  var line;
+  // find first line which contains a source map starting at end of content
+  for (var i = lines.length - 1; i > 0; i--) {
+    line = lines[i]
+    if (~line.indexOf('sourceMappingURL=data:')) return line;
+  }
+}
 
 function Molder(sourcemap) {
   this.sourcemap = sourcemap;
@@ -127,4 +135,3 @@ exports.transformSources = function (map) {
 exports.transformSourcesRelativeTo = function (root) {
   return exports.transformSources(mapPathRelativeTo(root));
 };
-
